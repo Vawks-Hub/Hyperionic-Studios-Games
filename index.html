@@ -1,58 +1,60 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Hyperionic Studios Roblox Games</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0d0d0d;
-            color: white;
-            text-align: center;
-        }
+<meta charset="UTF-8">
+<title>Hyperionic Studios Roblox Games</title>
 
-        header {
-            padding: 60px 20px;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d0d;
+    color: white;
+    text-align: center;
+}
 
-        h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
+header {
+    padding: 60px 20px;
+}
 
-        .game-card {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 12px;
-            width: 350px;
-            margin: 0 auto;
-            box-shadow: 0 0 20px rgba(0,0,0,0.4);
-        }
+h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
 
-        .game-card img {
-            width: 100%;
-            border-radius: 10px;
-        }
+.game-card {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    width: 350px;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
 
-        .play-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 25px;
-            background: #3b82f6;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
-            transition: 0.3s;
-        }
+.game-card img {
+    width: 100%;
+    border-radius: 10px;
+}
 
-        .play-btn:hover {
-            background: #2563eb;
-            transform: scale(1.05);
-        }
-    </style>
+.play-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.play-btn:hover {
+    background: #2563eb;
+    transform: scale(1.05);
+}
+</style>
 </head>
+
 <body>
 
 <header>
@@ -70,38 +72,51 @@
 </section>
 
 <script>
-    const universeId = 9584527181;
+const universeId = 9584527181;
 
-    async function loadGameData() {
-        try {
-            // Proxy pour contourner CORS
-            const proxy = "https://corsproxy.io/?";
+// Proxy alternatif
+const proxy = "https://api.allorigins.win/raw?url=";
 
-            // Infos du jeu
-            const gameInfo = await fetch(proxy + `https://games.roblox.com/v1/games?universeIds=${universeId}`).then(r => r.json());
-            const data = gameInfo.data[0];
+async function loadGameData() {
+    try {
+        // Infos du jeu
+        const gameRes = await fetch(
+            proxy + encodeURIComponent(
+                `https://games.roblox.com/v1/games?universeIds=${universeId}`
+            )
+        );
+        const gameInfo = await gameRes.json();
+        const data = gameInfo.data[0];
 
-            // Icône du jeu
-            const iconInfo = await fetch(proxy + `https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&size=512x512&format=Png&isCircular=false`).then(r => r.json());
-            const icon = iconInfo.data[0].imageUrl;
+        // Icône
+        const iconRes = await fetch(
+            proxy + encodeURIComponent(
+                `https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&size=512x512&format=Png&isCircular=false`
+            )
+        );
+        const iconInfo = await iconRes.json();
+        const icon = iconInfo.data[0].imageUrl;
 
-            // Mise à jour de l'interface
-            document.getElementById("gameIcon").src = icon;
-            document.getElementById("gameName").textContent = data.name;
-            document.getElementById("stats").innerHTML = `
-                Players online: <b>${data.playing}</b><br>
-                Total visits: <b>${data.visits.toLocaleString()}</b>
-            `;
-            document.getElementById("playLink").href = `https://www.roblox.com/games/${data.rootPlaceId}`;
-        } catch (err) {
-            console.error(err);
-            document.getElementById("stats").textContent = "Error loading data.";
-        }
+        // Update UI
+        document.getElementById("gameIcon").src = icon;
+        document.getElementById("gameName").textContent = data.name;
+        document.getElementById("stats").innerHTML = `
+            Players online: <b>${data.playing}</b><br>
+            Total visits: <b>${data.visits.toLocaleString()}</b>
+        `;
+        document.getElementById("playLink").href =
+            `https://www.roblox.com/games/${data.rootPlaceId}`;
+
+    } catch (err) {
+        console.error(err);
+        document.getElementById("stats").textContent = "Error loading data.";
     }
+}
 
-    loadGameData();
-    setInterval(loadGameData, 15000);
+loadGameData();
+setInterval(loadGameData, 15000);
 </script>
 
 </body>
 </html>
+
