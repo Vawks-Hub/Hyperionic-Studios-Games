@@ -1,122 +1,79 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Hyperionic Studios Roblox Games</title>
+<title>Hyperionic Studios - Live Stats</title>
 
 <style>
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0d0d0d;
+    background: #111;
     color: white;
+    font-family: Arial;
     text-align: center;
+    padding-top: 80px;
 }
 
-header {
-    padding: 60px 20px;
-}
-
-h1 {
-    font-size: 48px;
-    margin-bottom: 10px;
-}
-
-.game-card {
-    background: #1a1a1a;
-    padding: 20px;
+.card {
+    background: #1e1e1e;
+    padding: 30px;
+    width: 400px;
+    margin: auto;
     border-radius: 12px;
-    width: 350px;
-    margin: 0 auto;
-    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
-.game-card img {
-    width: 100%;
-    border-radius: 10px;
-}
-
-.play-btn {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 12px 25px;
-    background: #3b82f6;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-.play-btn:hover {
-    background: #2563eb;
-    transform: scale(1.05);
+.stat {
+    font-size: 22px;
+    margin: 10px 0;
 }
 </style>
 </head>
-
 <body>
 
-<header>
-    <h1>Hyperionic Studios Roblox Games</h1>
-    <p>Live game information</p>
-</header>
-
-<section class="game-section">
-    <div class="game-card">
-        <img id="gameIcon" src="" alt="Game Icon">
-        <h2 id="gameName">Loading...</h2>
-        <p id="stats">Loading stats...</p>
-        <a class="play-btn" id="playLink" href="#" target="_blank">Play Now</a>
-    </div>
-</section>
+<div class="card">
+    <h1 id="gameName">Loading...</h1>
+    <div class="stat">Players Online: <b id="players">0</b></div>
+    <div class="stat">Total Visits: <b id="visits">0</b></div>
+</div>
 
 <script>
+
 const universeId = 9584527181;
 
-// Proxy alternatif
+// Proxy compatible GitHub Pages
 const proxy = "https://api.allorigins.win/raw?url=";
 
-async function loadGameData() {
+async function loadStats() {
     try {
-        // Infos du jeu
-        const gameRes = await fetch(
+
+        const response = await fetch(
             proxy + encodeURIComponent(
                 `https://games.roblox.com/v1/games?universeIds=${universeId}`
             )
         );
-        const gameInfo = await gameRes.json();
-        const data = gameInfo.data[0];
 
-        // Icône
-        const iconRes = await fetch(
-            proxy + encodeURIComponent(
-                `https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&size=512x512&format=Png&isCircular=false`
-            )
-        );
-        const iconInfo = await iconRes.json();
-        const icon = iconInfo.data[0].imageUrl;
+        const json = await response.json();
+        const data = json.data[0];
 
-        // Update UI
-        document.getElementById("gameIcon").src = icon;
         document.getElementById("gameName").textContent = data.name;
-        document.getElementById("stats").innerHTML = `
-            Players online: <b>${data.playing}</b><br>
-            Total visits: <b>${data.visits.toLocaleString()}</b>
-        `;
-        document.getElementById("playLink").href =
-            `https://www.roblox.com/games/${data.rootPlaceId}`;
+        document.getElementById("players").textContent = data.playing;
+        document.getElementById("visits").textContent =
+            data.visits.toLocaleString();
 
     } catch (err) {
-        console.error(err);
-        document.getElementById("stats").textContent = "Error loading data.";
+        document.getElementById("gameName").textContent = "Error loading data";
     }
 }
 
-loadGameData();
-setInterval(loadGameData, 15000);
+// Chargement initial
+loadStats();
+
+// Refresh toutes les 10 secondes
+setInterval(loadStats, 10000);
+
 </script>
 
 </body>
 </html>
+
 
