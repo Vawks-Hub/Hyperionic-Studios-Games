@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hyperionic Studios – Roblox Game Stats</title>
+<title>Hyperionic Studios Games Stats</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -12,10 +12,12 @@
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 28px;
     }
 
     .card {
@@ -24,6 +26,7 @@
         border-radius: 15px;
         width: 90%;
         max-width: 420px;
+        margin: 30px auto;
         text-align: center;
         box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
@@ -34,7 +37,7 @@
         margin-bottom: 15px;
     }
 
-    .play-btn {
+    .play-btn, .join-btn {
         display: inline-block;
         margin-top: 15px;
         padding: 12px 20px;
@@ -46,7 +49,7 @@
         transition: 0.2s;
     }
 
-    .play-btn:hover {
+    .play-btn:hover, .join-btn:hover {
         background: #00d480;
     }
 </style>
@@ -54,6 +57,9 @@
 
 <body>
 
+<h1>Hyperionic Studios Games Stats</h1>
+
+<!-- GAME CARD -->
 <div class="card">
     <img id="gameIcon" src="" alt="Game Icon">
 
@@ -65,23 +71,43 @@
     <a id="playBtn" href="#" target="_blank" class="play-btn">▶ Play on Roblox</a>
 </div>
 
+<!-- GROUP CARD -->
+<div class="card">
+    <img id="groupIcon" src="" alt="Group Icon">
+
+    <h2 id="groupName">Hyperionic Studios Roblox Community</h2>
+
+    <p id="groupDesc"></p>
+    <p>Members: <b id="groupMembers">0</b></p>
+
+    <a id="joinGroup" href="#" target="_blank" class="join-btn">⭐ Join Group</a>
+</div>
+
 <script>
-const API = "https://hyperionic-studios-games-stats.vawksrblx.workers.dev/"; // 🔥 Mets ton URL ici
+const API = "https://hyperionic-studios-games-stats.vawksrblx.workers.dev/"; // 🔥 Mets ton URL Worker ici
 
 async function loadStats() {
     try {
         const res = await fetch(API);
         const data = await res.json();
-        const game = data.games[0];
 
+        const game = data.games[0];
+        const group = data.group;
+
+        // GAME
         document.getElementById("gameIcon").src = game.icon;
         document.getElementById("gameName").textContent = game.name;
         document.getElementById("players").textContent = game.playing;
         document.getElementById("visits").textContent = game.visits.toLocaleString();
         document.getElementById("playBtn").href = `https://www.roblox.com/games/${game.id}`;
+
+        // GROUP
+        document.getElementById("groupIcon").src = group.icon;
+        document.getElementById("groupDesc").textContent = group.description;
+        document.getElementById("groupMembers").textContent = group.members.toLocaleString();
+        document.getElementById("joinGroup").href = `https://www.roblox.com/groups/${GROUP_ID}`;
     } catch (err) {
         console.error(err);
-        document.getElementById("gameName").textContent = "Error loading data";
     }
 }
 
