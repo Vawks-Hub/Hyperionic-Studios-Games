@@ -21,16 +21,6 @@
             margin-bottom: 10px;
         }
 
-        p.subtitle {
-            font-size: 20px;
-            opacity: 0.8;
-        }
-
-        .game-section {
-            margin-top: 40px;
-            padding: 20px;
-        }
-
         .game-card {
             background: #1a1a1a;
             padding: 20px;
@@ -67,17 +57,48 @@
 
 <header>
     <h1>Hyperionic Studios Roblox Games</h1>
-    <p class="subtitle">Discover our Roblox creations</p>
+    <p>Live game information</p>
 </header>
 
 <section class="game-section">
     <div class="game-card">
-        <img src="IMAGE_DU_JEU_ICI" alt="Game Thumbnail">
-        <h2>Nom de ton jeu</h2>
-        <p>Une petite description de ton jeu ici.</p>
-        <a class="play-btn" href="LIEN_VERS_TON_JEU_ROBLOX">Play Now</a>
+        <img id="gameIcon" src="" alt="Game Icon">
+        <h2 id="gameName">Loading...</h2>
+        <p id="stats">Loading stats...</p>
+        <a class="play-btn" id="playLink" href="#" target="_blank">Play Now</a>
     </div>
 </section>
+
+<script>
+    const universeId = 139395558187301;
+
+    async function loadGameData() {
+        try {
+            // Infos du jeu
+            const gameInfo = await fetch(`https://games.roblox.com/v1/games?universeIds=${universeId}`).then(r => r.json());
+            const data = gameInfo.data[0];
+
+            // Icône du jeu
+            const iconInfo = await fetch(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&size=512x512&format=Png&isCircular=false`).then(r => r.json());
+            const icon = iconInfo.data[0].imageUrl;
+
+            // Mise à jour de l'interface
+            document.getElementById("gameIcon").src = icon;
+            document.getElementById("gameName").textContent = data.name;
+            document.getElementById("stats").innerHTML = `
+                Players online: <b>${data.playing}</b><br>
+                Total visits: <b>${data.visits.toLocaleString()}</b>
+            `;
+            document.getElementById("playLink").href = `https://www.roblox.com/games/${data.rootPlaceId}`;
+        } catch (err) {
+            console.error(err);
+            document.getElementById("stats").textContent = "Error loading data.";
+        }
+    }
+
+    loadGameData();
+    setInterval(loadGameData, 15000); // Mise à jour toutes les 15 secondes
+</script>
 
 </body>
 </html>
