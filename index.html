@@ -2,36 +2,49 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Hyperionic Studios - Live Stats</title>
+<title>Hyperionic Studios Games Statistics</title>
 
 <style>
 body {
-    background: #111;
+    background: #0d0d0d;
     color: white;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     text-align: center;
-    padding-top: 80px;
+    margin: 0;
+}
+
+header {
+    padding: 60px 20px;
+}
+
+h1 {
+    font-size: 52px;
+    margin-bottom: 40px;
 }
 
 .card {
-    background: #1e1e1e;
+    background: #1a1a1a;
     padding: 30px;
-    width: 400px;
+    width: 420px;
     margin: auto;
     border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
 }
 
 .stat {
-    font-size: 22px;
-    margin: 10px 0;
+    font-size: 24px;
+    margin: 15px 0;
 }
 </style>
 </head>
 <body>
 
+<header>
+    <h1>Hyperionic Studios Games Statistics</h1>
+</header>
+
 <div class="card">
-    <h1 id="gameName">Loading...</h1>
+    <h2 id="gameName">Loading...</h2>
     <div class="stat">Players Online: <b id="players">0</b></div>
     <div class="stat">Total Visits: <b id="visits">0</b></div>
 </div>
@@ -40,19 +53,17 @@ body {
 
 const universeId = 9584527181;
 
-// Proxy compatible GitHub Pages
-const proxy = "https://api.allorigins.win/raw?url=";
+// Proxy alternatif
+const proxy = "https://cors.isomorphic-git.org/";
 
 async function loadStats() {
     try {
-
-        const response = await fetch(
-            proxy + encodeURIComponent(
-                `https://games.roblox.com/v1/games?universeIds=${universeId}`
-            )
+        const res = await fetch(
+            proxy + 
+            `https://games.roblox.com/v1/games?universeIds=${universeId}`
         );
 
-        const json = await response.json();
+        const json = await res.json();
         const data = json.data[0];
 
         document.getElementById("gameName").textContent = data.name;
@@ -61,19 +72,15 @@ async function loadStats() {
             data.visits.toLocaleString();
 
     } catch (err) {
-        document.getElementById("gameName").textContent = "Error loading data";
+        document.getElementById("gameName").textContent = "Failed to load data";
+        console.error(err);
     }
 }
 
-// Chargement initial
 loadStats();
-
-// Refresh toutes les 10 secondes
 setInterval(loadStats, 10000);
 
 </script>
 
 </body>
 </html>
-
-
