@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hyperionic Studios Games Stats</title>
+<title>Hyperionic Studios Roblox Community</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -37,7 +37,7 @@
         margin-bottom: 15px;
     }
 
-    .play-btn, .join-btn {
+    .btn {
         display: inline-block;
         margin-top: 15px;
         padding: 12px 20px;
@@ -49,7 +49,7 @@
         transition: 0.2s;
     }
 
-    .play-btn:hover, .join-btn:hover {
+    .btn:hover {
         background: #00d480;
     }
 </style>
@@ -57,7 +57,7 @@
 
 <body>
 
-<h1>Hyperionic Studios Games Stats</h1>
+<h1>Hyperionic Studios Roblox Community</h1>
 
 <!-- GAME CARD -->
 <div class="card">
@@ -68,19 +68,19 @@
     <p>Players online: <b id="players">0</b></p>
     <p>Total visits: <b id="visits">0</b></p>
 
-    <a id="playBtn" href="#" target="_blank" class="play-btn">▶ Play on Roblox</a>
+    <a id="playBtn" href="#" target="_blank" class="btn">▶ Play on Roblox</a>
 </div>
 
 <!-- GROUP CARD -->
 <div class="card">
     <img id="groupIcon" src="" alt="Group Icon">
 
-    <h2 id="groupName">Hyperionic Studios Roblox Community</h2>
+    <h2 id="groupName">Loading group...</h2>
 
     <p id="groupDesc"></p>
     <p>Members: <b id="groupMembers">0</b></p>
 
-    <a id="joinGroup" href="#" target="_blank" class="join-btn">⭐ Join Group</a>
+    <a id="joinGroup" href="#" target="_blank" class="btn">⭐ Join Group</a>
 </div>
 
 <script>
@@ -103,9 +103,10 @@ async function loadStats() {
 
         // GROUP
         document.getElementById("groupIcon").src = group.icon;
+        document.getElementById("groupName").textContent = group.name;
         document.getElementById("groupDesc").textContent = group.description;
         document.getElementById("groupMembers").textContent = group.members.toLocaleString();
-        document.getElementById("joinGroup").href = `https://www.roblox.com/groups/${GROUP_ID}`;
+        document.getElementById("joinGroup").href = `https://www.roblox.com/groups/${group.id}`;
     } catch (err) {
         console.error(err);
     }
