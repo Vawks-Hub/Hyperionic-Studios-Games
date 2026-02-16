@@ -1,85 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hyperionic Studios Games Statistics</title>
+<title>Hyperionic Studios – Roblox Game Stats</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body {
-    background: #0d0d0d;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-}
+    body {
+        background: #0d0d0d;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
 
-header {
-    padding: 60px 20px;
-}
+    .card {
+        background: #111;
+        padding: 20px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
 
-h1 {
-    font-size: 52px;
-    margin-bottom: 40px;
-}
+    .card img {
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
 
-.card {
-    background: #1a1a1a;
-    padding: 30px;
-    width: 420px;
-    margin: auto;
-    border-radius: 12px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.6);
-}
+    .play-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 12px 20px;
+        background: #00b06f;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: 0.2s;
+    }
 
-.stat {
-    font-size: 24px;
-    margin: 15px 0;
-}
+    .play-btn:hover {
+        background: #00d480;
+    }
 </style>
 </head>
+
 <body>
 
-<header>
-    <h1>Hyperionic Studios Games Statistics</h1>
-</header>
-
 <div class="card">
+    <img id="gameIcon" src="" alt="Game Icon">
+
     <h2 id="gameName">Loading...</h2>
-    <div class="stat">Players Online: <b id="players">0</b></div>
-    <div class="stat">Total Visits: <b id="visits">0</b></div>
+
+    <p>Players online: <b id="players">0</b></p>
+    <p>Total visits: <b id="visits">0</b></p>
+
+    <a id="playBtn" href="#" target="_blank" class="play-btn">▶ Play on Roblox</a>
 </div>
 
 <script>
-
-const universeId = 9584527181;
-
-// Proxy alternatif
-const proxy = "https://cors.isomorphic-git.org/";
+const API = "https://green-term-1516.valentin-kim1809.workers.dev/"; // 🔥 Mets ton URL ici
 
 async function loadStats() {
     try {
-        const res = await fetch(
-            proxy + 
-            `https://games.roblox.com/v1/games?universeIds=${universeId}`
-        );
+        const res = await fetch(API);
+        const data = await res.json();
+        const game = data.games[0];
 
-        const json = await res.json();
-        const data = json.data[0];
-
-        document.getElementById("gameName").textContent = data.name;
-        document.getElementById("players").textContent = data.playing;
-        document.getElementById("visits").textContent =
-            data.visits.toLocaleString();
-
+        document.getElementById("gameIcon").src = game.icon;
+        document.getElementById("gameName").textContent = game.name;
+        document.getElementById("players").textContent = game.playing;
+        document.getElementById("visits").textContent = game.visits.toLocaleString();
+        document.getElementById("playBtn").href = `https://www.roblox.com/games/${game.id}`;
     } catch (err) {
-        document.getElementById("gameName").textContent = "Failed to load data";
         console.error(err);
+        document.getElementById("gameName").textContent = "Error loading data";
     }
 }
 
 loadStats();
-setInterval(loadStats, 10000);
-
+setInterval(loadStats, 15000);
 </script>
 
 </body>
