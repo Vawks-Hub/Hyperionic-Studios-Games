@@ -124,7 +124,8 @@ async function loadStats() {
         document.getElementById("gameName").textContent = game.name;
         document.getElementById("players").textContent = game.playing;
         document.getElementById("visits").textContent = game.visits.toLocaleString();
-        document.getElementById("playBtn").href = `https://www.roblox.com/games/${game.id}`;
+        document.getElementById("playBtn").href = `https://www.roblox.com/games/${game.placeId}`;
+
 
         // GROUP
         document.getElementById("groupIcon").src = group.icon;
